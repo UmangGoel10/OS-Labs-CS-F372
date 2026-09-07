@@ -1,0 +1,6 @@
+maxjobs 2
+timeout -1
+retries 2
+job FLAKY false
+job AFTER echo done
+depend AFTER FLAKY

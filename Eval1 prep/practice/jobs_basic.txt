@@ -1,0 +1,8 @@
+maxjobs 2
+timeout -1
+retries 0
+job A echo hello-A
+job B echo hello-B
+job C echo hello-C
+depend C A
+depend C B

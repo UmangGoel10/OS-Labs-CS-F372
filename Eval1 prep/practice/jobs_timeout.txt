@@ -1,0 +1,6 @@
+maxjobs 1
+timeout 2
+retries 0
+job SLOW sleep 30
+job AFTER echo done
+depend AFTER SLOW

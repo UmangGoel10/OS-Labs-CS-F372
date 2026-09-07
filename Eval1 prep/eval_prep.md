@@ -6,6 +6,30 @@ these same building blocks. Goal here: know every variation cold, then practice 
 
 ---
 
+## 0. Headers available (confirmed: same as Lab01 + Lab 2)
+
+Combined `#include` set actually used across `parmake.c` and `task_manager.c` — safe to assume all
+of these are fair game tomorrow:
+
+| Header | What you get from it |
+|---|---|
+| `<stdio.h>` | `printf`, `fprintf`, `perror`, `fscanf`, `fopen`/`fclose`, `snprintf` |
+| `<stdlib.h>` | `malloc`, `atoi`, `exit` |
+| `<string.h>` | `strcmp`, `strlen`, `strdup`, `strtok`, etc. — **allowed**, no need to hand-roll tokenizers |
+| `<unistd.h>` | `fork`, `execv`/`execvp`/etc., `_exit`, `sleep`, `dup2`, `close` |
+| `<sys/types.h>` | `pid_t` |
+| `<sys/wait.h>` | `wait`, `waitpid`, `WIFEXITED`, `WEXITSTATUS`, `WIFSIGNALED`, `WTERMSIG`, `WNOHANG`, `WUNTRACED` |
+| `<signal.h>` | `kill`, `signal`/`sigaction`, `SIGSTOP`/`SIGCONT`/`SIGTERM`/`SIGKILL`, `sig_atomic_t` |
+| `<time.h>` | `clock_gettime`, `CLOCK_MONOTONIC`, `struct timespec` |
+| `<fcntl.h>` | `open`, `O_WRONLY`/`O_CREAT`/`O_TRUNC` |
+
+Practical takeaway: **use `strtok`/`strdup`/`strcmp` freely** for any command-parsing or
+tokenizing task — the manual-splitting trick in `scenario_a.c` was a deliberately harder
+constraint for practice, not a reflection of the real eval's rules. Reach for the standard
+library first; only hand-roll something if a TODO comment or prompt explicitly restricts it.
+
+---
+
 ## 1. Building blocks — what's possible to write
 
 ### `fork()`
