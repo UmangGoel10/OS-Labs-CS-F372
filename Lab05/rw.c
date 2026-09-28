@@ -1,4 +1,4 @@
-// Writer and reader for a shared file-backed mmap region.
+/* TA reference solution: writer threads with mutex, file-backed MAP_SHARED mmap. */
 #define _DEFAULT_SOURCE
 #include <fcntl.h>
 #include <pthread.h>
@@ -9,55 +9,50 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-// Do not modify these constants.
 #define SHARED_FILE  "shared.bin"
 #define NUM_WRITERS  3
 #define RECORD_SIZE  64
 #define REGION_SIZE  ((1 + NUM_WRITERS) * RECORD_SIZE)
 
-// Slot 0 of the region. records_written is shared across all writer threads.
 typedef struct {
     uint32_t records_written;
-    // Unused padding so the header fills a full RECORD_SIZE slot, like every record.
+    // Unused filler so the header still occupies one full RECORD_SIZE-byte
+    // slot, keeping every slot (header and records alike) the same size and
+    // Record data at fixed, predictable offsets in the file.
     char     _pad[RECORD_SIZE - sizeof(uint32_t)];
 } Header;
 
-// Slots 1 through NUM_WRITERS of the region. Slot (1 + id) belongs to writer id.
 typedef struct {
     int  writer_id;
     char message[RECORD_SIZE - sizeof(int)];
 } Record;
 
-// Do not modify this declaration.
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
-
-// Set by run_writers() before threads are spawned. Do not modify.
 static unsigned char *region;
 
 static void *writer_thread(void *arg) {
     int id = *(int *)arg;
 
-    // Provided: pointers to the header and to this writer's record.
-    Header *header = (Header *)region;
-    Record *record = (Record *)(region + RECORD_SIZE + id * RECORD_SIZE);
+    Header *h = (Header *)region;
+    Record *r = (Record *)(region + RECORD_SIZE + id * RECORD_SIZE);
 
-    // TODO: Lock the mutex.
+    pthread_mutex_lock(&lock);
+    r->writer_id = id;
+    snprintf(r->message, sizeof(r->message), "hello from writer %d", id);
+    // Publish only after the record is complete: the reader treats the
+    // counter as "this many records are ready".
+    h->records_written++;
+    pthread_mutex_unlock(&lock);
 
-    // TODO: Fill in the record: set writer_id to id and write a non-empty string to message.
-
-    // TODO: Increment header->records_written, after filling the record.
-    //       The reader treats this count as "records that are ready".
-
-    // TODO: Unlock the mutex.
-
-    // TODO: Call msync() on the whole region and wait for it to finish.
-    //       It only flushes to disk; other processes can see your write without it.
-
-    (void)lock; (void)header; (void)record;  // Remove this line once you use them.
+    msync(region, REGION_SIZE, MS_SYNC);
     return NULL;
 }
 
-// Demo only: RW_DEMO_STAGGER_MS delays each writer so `./rw read` shows them arriving one by one.
+// Optional per-writer stagger for the live demo, in milliseconds, set via
+// the RW_DEMO_STAGGER_MS environment variable. Defaults to 0 so grading
+// runs at full speed; the demo target sets it so writes land a visible
+// moment apart, so a concurrently-running `./rw read` shows them arriving
+// one at a time instead of all at once.
 static useconds_t demo_stagger_us(void) {
     const char *v = getenv("RW_DEMO_STAGGER_MS");
     if (!v) return 0;
@@ -65,26 +60,14 @@ static useconds_t demo_stagger_us(void) {
     return ms > 0 ? (useconds_t)(ms * 1000) : 0;
 }
 
-// Provided except for the mmap() call: open the file, size it, spawn the writers, join, unmap.
 void run_writers(void) {
     int fd = open(SHARED_FILE, O_RDWR | O_CREAT | O_TRUNC, 0644);
     if (fd == -1) { perror("open"); return; }
-
-    // ftruncate sets the file's size. A new file is 0 bytes, so there would be nothing to map.
     if (ftruncate(fd, REGION_SIZE) == -1) { perror("ftruncate"); close(fd); return; }
 
-    // TODO: Call mmap() to map the whole file into memory and store the result in region.
-    //       Let the OS choose the address (pass NULL).
-    //       Map REGION_SIZE bytes, starting at offset 0 of the file.
-    //       Allow both reading and writing.
-    //       Use a shared mapping, so writes reach the file and other processes can see them.
-    //       The file to map is fd.
-    region = MAP_FAILED;  // Replace this placeholder with your mmap() call.
+    region = mmap(NULL, REGION_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     close(fd);
-    if (region == MAP_FAILED) {
-        fprintf(stderr, "Region mapping failed. Complete or check the mmap() TODO.\n");
-        return;
-    }
+    if (region == MAP_FAILED) { perror("mmap"); return; }
 
     pthread_t threads[NUM_WRITERS];
     int ids[NUM_WRITERS];
@@ -101,25 +84,45 @@ void run_writers(void) {
     region = NULL;
 }
 
-// TODO: Open SHARED_FILE read-only and map it into memory.
-//       Use a shared, read-only mapping of REGION_SIZE bytes from offset 0.
-//
-//       The writers race, so wait for them. Keep a local count, starting at 0,
-//       and loop while count < NUM_WRITERS:
-//         1. Set count to header->records_written.
-//         2. For each writer i (0 to NUM_WRITERS - 1) not printed yet, if its
-//            message is non-empty, print
-//                "writer %d: %s\n"
-//            and call fflush(stdout).
-//         3. If count is still below NUM_WRITERS, usleep() briefly.
-//       Read the count before the scan, so a writer that finishes mid-scan is not missed.
-//
-//       Then print "records_written: %u\n", unmap, and close.
-//       If no writer ever finishes, this waits forever; press Ctrl-C.
+// Polls the shared region rather than assuming the writers have finished.
+// Each pass reads records_written FIRST, then scans the record slots and
+// prints every not-yet-printed record whose message is non-empty. The loop
+// ends after a pass whose count was NUM_WRITERS. Reading the count before the
+// scan matters: writers bump it only after their record is complete, so a
+// scan that starts after seeing NUM_WRITERS must find every record. (Reading
+// it after the scan could miss a writer that finished in between.)
+// When called after run_writers() has already completed (the autograder's
+// case), the first pass finds everything ready and returns with no sleep.
 void run_reader(void) {
+    int fd = open(SHARED_FILE, O_RDONLY);
+    if (fd == -1) { perror("open"); return; }
+
+    unsigned char *map = mmap(NULL, REGION_SIZE, PROT_READ, MAP_SHARED, fd, 0);
+    close(fd);
+    if (map == MAP_FAILED) { perror("mmap"); return; }
+
+    Header *h = (Header *)map;
+    int printed_slot[NUM_WRITERS] = {0};
+    uint32_t count = 0;
+
+    while (count < NUM_WRITERS) {
+        count = h->records_written;
+        for (int i = 0; i < NUM_WRITERS; i++) {
+            if (printed_slot[i]) continue;
+            Record *r = (Record *)(map + RECORD_SIZE + i * RECORD_SIZE);
+            if (r->message[0] != '\0') {
+                printf("writer %d: %s\n", r->writer_id, r->message);
+                fflush(stdout);
+                printed_slot[i] = 1;
+            }
+        }
+        if (count < NUM_WRITERS) usleep(50000);
+    }
+
+    printf("records_written: %u\n", count);
+    munmap(map, REGION_SIZE);
 }
 
-// Provided: dispatch on argv[1]. Do not modify.
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         fprintf(stderr, "Usage: %s write|read\n", argv[0]);
