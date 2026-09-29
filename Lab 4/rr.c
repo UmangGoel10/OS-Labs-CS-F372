@@ -49,7 +49,13 @@ int main(int argc, char *argv[]) {
      *    is starting a new program, so this is safe to do straight away.
      *
      */
-    
+    tab[i] = fork();
+    if (tab[i] == 0) {
+        execvp(args[0], args);
+        perror("execvp");
+        _exit(1);
+    }
+    kill(tab[i], SIGSTOP);
     /* ================= END TODO ================= */
   }
 
@@ -92,7 +98,13 @@ int main(int argc, char *argv[]) {
      *  - Freeze the tab again: send it SIGSTOP signal.
      *
      */
-
+    for (i = 0; i < n; i++) {
+        int secs = (i == active) ? 2 * QUANTUM : QUANTUM;
+        printf("[sched] round %d: tab %d runs for %d s\n", round, i, secs);
+        kill(tab[i], SIGCONT);
+        sleep(secs);
+        kill(tab[i], SIGSTOP);
+    }
     /* ================= END TODO ================= */
   }
 

@@ -80,7 +80,20 @@ int main(int argc, char *argv[]) {
      *    until in one slice, it has the highest priority and gets its turn.
      *
      */
-
+    for (k = 0; k < n; k++) {
+        int best = 0;
+        for (i = 1; i < n; i++)
+            if (prio[i] > prio[best]) best = i;
+        printf("[sched] round %d: tab %d runs (prio %d)\n",
+                round, best, prio[best]);
+        kill(tab[best], SIGCONT);
+        sleep(QUANTUM);
+        kill(tab[best], SIGSTOP);
+        
+        //aging
+        prio[best] = (best == active) ? 3 : 1;
+        for (i = 0; i < n; i++) if (i != best) prio[i]++;
+    }
     /* ================= END TODO ================= */
   }
 

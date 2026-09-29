@@ -69,7 +69,18 @@ void *editor(void *arg) {
      * Write it WITHOUT any lock first and run it. Then read task C2 in the
      * README.
      */
-
+    pthread_mutex_lock(&page_lock);
+    int line = next_line;
+    snprintf(page[line], sizeof page[line],
+              "<p>tab %d edited by thread %d</p>", tab_id, me);
+    updates++;
+    sleep(1);
+    next_line = (line + 1) % LINES;
+    if (owner_of(page[line]) != me)
+        printf("[tab %d] LOST: thread %d lost line %d -> %s\n",
+                tab_id, me, line, page[line]);
+    printf("[tab %d] thread %d wrote line %d\n", tab_id, me, line);
+    pthread_mutex_unlock(&page_lock);
     /* ================= END TODO ================= */
 
     sleep(1); /* thinking time, outside anything you lock */
@@ -119,7 +130,12 @@ int main(int argc, char *argv[]) {
    *    wait for every thread to finish with pthread_join.
    *
    */
-
+  for (i = 0; i < THREADS; i++) {
+      id[i] = i;
+      pthread_create(&th[i], NULL, editor, &id[i]);
+  }
+  for (i = 0; i < THREADS; i++)
+      pthread_join(th[i], NULL);
   /* ================= END TODO ================= */
 
   printf("[tab %d] final page:\n", tab_id);
