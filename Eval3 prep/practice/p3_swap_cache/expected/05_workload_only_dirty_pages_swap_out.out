@@ -1,0 +1,62 @@
+[PAGE FAULT] Page 0 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 0
+READ 0 0 -> 0
+[PAGE FAULT] Page 1 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 1
+READ 1 0 -> 0
+[PAGE FAULT] Page 2 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 2
+READ 2 0 -> 0
+[PAGE FAULT] Page 3 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 3
+READ 3 0 -> 0
+[PAGE FAULT] Page 4 (ANON)
+  [DISK I/O] SWAP OUT: Frame 0 -> Swap Slot 0
+  [MEM] ZERO-FILL: Initializing Frame 0
+READ 4 0 -> 0
+[PAGE FAULT] Page 0 (ANON)
+  [DISK I/O] SWAP OUT: Frame 1 -> Swap Slot 1
+  [DISK I/O] SWAP IN: Slot 0 -> Frame 1
+READ 0 0 -> 0
+[PAGE FAULT] Page 1 (ANON)
+  [DISK I/O] SWAP OUT: Frame 2 -> Swap Slot 2
+  [DISK I/O] SWAP IN: Slot 1 -> Frame 2
+READ 1 0 -> 0
+[PAGE FAULT] Page 2 (ANON)
+  [DISK I/O] SWAP OUT: Frame 3 -> Swap Slot 3
+  [DISK I/O] SWAP IN: Slot 2 -> Frame 3
+READ 2 0 -> 0
+[PAGE FAULT] Page 3 (ANON)
+  [DISK I/O] SWAP OUT: Frame 0 -> Swap Slot 4
+  [DISK I/O] SWAP IN: Slot 3 -> Frame 0
+READ 3 0 -> 0
+[PAGE FAULT] Page 4 (ANON)
+  [DISK I/O] SWAP IN: Slot 4 -> Frame 1
+READ 4 0 -> 0
+[PAGE FAULT] Page 0 (ANON)
+  [DISK I/O] SWAP IN: Slot 0 -> Frame 2
+READ 0 0 -> 0
+WRITE 2 0 <- 1
+WRITE 3 0 <- 2
+WRITE 4 0 <- 3
+WRITE 0 0 <- 4
+[PAGE FAULT] Page 1 (ANON)
+  [DISK I/O] SWAP OUT: Frame 3 -> Swap Slot 2
+  [DISK I/O] SWAP IN: Slot 1 -> Frame 3
+READ 1 0 -> 0
+[PAGE FAULT] Page 2 (ANON)
+  [DISK I/O] SWAP IN: Slot 2 -> Frame 3
+READ 2 0 -> 1
+STATE
+PAGE 0 type=ANON resident=1 frame=2 dirty=1 ref=1 swap=0 file=-1 offset=0 last=15
+PAGE 1 type=ANON resident=0 frame=-1 dirty=0 ref=0 swap=1 file=-1 offset=0 last=16
+PAGE 2 type=ANON resident=1 frame=3 dirty=0 ref=1 swap=2 file=-1 offset=0 last=17
+PAGE 3 type=ANON resident=1 frame=0 dirty=1 ref=1 swap=3 file=-1 offset=0 last=13
+PAGE 4 type=ANON resident=1 frame=1 dirty=1 ref=1 swap=4 file=-1 offset=0 last=14
+PAGE 5 type=ANON resident=0 frame=-1 dirty=0 ref=0 swap=-1 file=-1 offset=0 last=0
+PAGE 6 type=FILE resident=0 frame=-1 dirty=0 ref=0 swap=-1 file=101 offset=0 last=0
+PAGE 7 type=FILE resident=0 frame=-1 dirty=0 ref=0 swap=-1 file=101 offset=64 last=0
+PAGE 8 type=FILE resident=0 frame=-1 dirty=0 ref=0 swap=-1 file=101 offset=128 last=0
+PAGE 9 type=FILE resident=0 frame=-1 dirty=0 ref=0 swap=-1 file=101 offset=192 last=0
+PAGE 10 type=FILE resident=0 frame=-1 dirty=0 ref=0 swap=-1 file=101 offset=256 last=0
+PAGE 11 type=FILE resident=0 frame=-1 dirty=0 ref=0 swap=-1 file=101 offset=320 last=0

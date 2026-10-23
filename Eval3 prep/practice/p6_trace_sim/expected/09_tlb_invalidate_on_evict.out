@@ -1,0 +1,7 @@
+#1 R addr=0 vpn=0 off=0 tlb=MISS: FAULT load frame=0
+#2 R addr=64 vpn=1 off=0 tlb=MISS: FAULT load frame=1
+#3 R addr=128 vpn=2 off=0 tlb=MISS: FAULT evict vpn=0 frame=0
+#4 R addr=0 vpn=0 off=0 tlb=MISS: FAULT evict vpn=1 frame=1
+#5 R addr=8 vpn=0 off=8 tlb=HIT: HIT frame=1
+FINAL frame0=2 frame1=0
+SUMMARY policy=FIFO frames=2 accesses=5 hits=1 faults=4 evictions=2 writebacks=0 tlb=4 tlb_hits=1 tlb_misses=4

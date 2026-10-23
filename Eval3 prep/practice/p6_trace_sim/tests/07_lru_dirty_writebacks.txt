@@ -1,0 +1,15 @@
+# LRU, 3 frames, writes dirty pages -> write-backs
+frames 3
+policy LRU
+W 64
+R 128
+W 192
+R 68
+R 256
+W 137
+R 320
+R 64
+W 257
+R 192
+R 384
+R 320

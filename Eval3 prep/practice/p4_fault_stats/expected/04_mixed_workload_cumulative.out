@@ -1,0 +1,38 @@
+[PAGE FAULT] Page 0 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 0
+READ 0 0 -> 0
+[PAGE FAULT] Page 1 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 1
+READ 1 0 -> 0
+[PAGE FAULT] Page 6 (FILE)
+  [FILE I/O] READ FILE (ID 101, Offset 0) -> Frame 2
+WRITE 6 0 <- 7
+[PAGE FAULT] Page 7 (FILE)
+  [FILE I/O] READ FILE (ID 101, Offset 64) -> Frame 3
+READ 7 0 -> 171
+READ 0 0 -> 0
+WRITE 0 1 <- 9
+[PAGE FAULT] Page 2 (ANON)
+  [DISK I/O] SWAP OUT: Frame 1 -> Swap Slot 0
+  [MEM] ZERO-FILL: Initializing Frame 1
+READ 2 0 -> 0
+READ 6 0 -> 7
+[PAGE FAULT] Page 3 (ANON)
+  [DISK I/O] SWAP OUT: Frame 1 -> Swap Slot 1
+  [MEM] ZERO-FILL: Initializing Frame 1
+READ 3 0 -> 0
+[PAGE FAULT] Page 1 (ANON)
+  [DISK I/O] SWAP OUT: Frame 1 -> Swap Slot 2
+  [DISK I/O] SWAP IN: Slot 0 -> Frame 1
+READ 1 0 -> 0
+STATS faults=7 minor=4 major=3 swap_in=1 swap_out=3 file_read=2 file_writeback=0 clean_discard=0
+[PAGE FAULT] Page 8 (FILE)
+  [DISK I/O] SWAP OUT: Frame 1 -> Swap Slot 0
+  [FILE I/O] READ FILE (ID 101, Offset 128) -> Frame 1
+READ 8 0 -> 171
+READ 0 1 -> 9
+[PAGE FAULT] Page 9 (FILE)
+  [FILE I/O] READ FILE (ID 101, Offset 192) -> Frame 3
+WRITE 9 0 <- 5
+READ 6 0 -> 7
+STATS faults=9 minor=4 major=5 swap_in=1 swap_out=4 file_read=4 file_writeback=0 clean_discard=1

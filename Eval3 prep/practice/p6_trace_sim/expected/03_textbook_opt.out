@@ -1,0 +1,22 @@
+#1 R addr=448 vpn=7 off=0: FAULT load frame=0
+#2 R addr=0 vpn=0 off=0: FAULT load frame=1
+#3 R addr=64 vpn=1 off=0: FAULT load frame=2
+#4 R addr=128 vpn=2 off=0: FAULT evict vpn=7 frame=0
+#5 R addr=0 vpn=0 off=0: HIT frame=1
+#6 R addr=192 vpn=3 off=0: FAULT evict vpn=1 frame=2
+#7 R addr=0 vpn=0 off=0: HIT frame=1
+#8 R addr=256 vpn=4 off=0: FAULT evict vpn=0 frame=1
+#9 R addr=128 vpn=2 off=0: HIT frame=0
+#10 R addr=192 vpn=3 off=0: HIT frame=2
+#11 R addr=0 vpn=0 off=0: FAULT evict vpn=4 frame=1
+#12 R addr=192 vpn=3 off=0: HIT frame=2
+#13 R addr=128 vpn=2 off=0: HIT frame=0
+#14 R addr=64 vpn=1 off=0: FAULT evict vpn=3 frame=2
+#15 R addr=128 vpn=2 off=0: HIT frame=0
+#16 R addr=0 vpn=0 off=0: HIT frame=1
+#17 R addr=64 vpn=1 off=0: HIT frame=2
+#18 R addr=448 vpn=7 off=0: FAULT evict vpn=2 frame=0
+#19 R addr=0 vpn=0 off=0: HIT frame=1
+#20 R addr=64 vpn=1 off=0: HIT frame=2
+FINAL frame0=7 frame1=0 frame2=1
+SUMMARY policy=OPT frames=3 accesses=20 hits=11 faults=9 evictions=6 writebacks=0

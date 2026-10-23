@@ -1,0 +1,15 @@
+# STRETCH: tlb 2, LRU frames
+frames 3
+policy LRU
+tlb 2
+R 64
+R 128
+R 68
+R 192
+R 72
+R 132
+R 76
+W 194
+R 256
+R 64
+R 192

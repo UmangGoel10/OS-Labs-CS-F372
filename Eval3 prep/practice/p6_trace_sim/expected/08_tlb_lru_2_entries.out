@@ -1,0 +1,13 @@
+#1 R addr=64 vpn=1 off=0 tlb=MISS: FAULT load frame=0
+#2 R addr=128 vpn=2 off=0 tlb=MISS: FAULT load frame=1
+#3 R addr=68 vpn=1 off=4 tlb=HIT: HIT frame=0
+#4 R addr=192 vpn=3 off=0 tlb=MISS: FAULT load frame=2
+#5 R addr=72 vpn=1 off=8 tlb=HIT: HIT frame=0
+#6 R addr=132 vpn=2 off=4 tlb=MISS: HIT frame=1
+#7 R addr=76 vpn=1 off=12 tlb=HIT: HIT frame=0
+#8 W addr=194 vpn=3 off=2 tlb=MISS: HIT frame=2
+#9 R addr=256 vpn=4 off=0 tlb=MISS: FAULT evict vpn=2 frame=1
+#10 R addr=64 vpn=1 off=0 tlb=MISS: HIT frame=0
+#11 R addr=192 vpn=3 off=0 tlb=MISS: HIT frame=2
+FINAL frame0=1 frame1=4 frame2=3
+SUMMARY policy=LRU frames=3 accesses=11 hits=7 faults=4 evictions=1 writebacks=0 tlb=2 tlb_hits=3 tlb_misses=8

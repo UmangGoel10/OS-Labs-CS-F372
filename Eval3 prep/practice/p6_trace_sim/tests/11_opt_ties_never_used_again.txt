@@ -1,0 +1,10 @@
+# OPT: pages 1 and 2 are never used again -> the tie goes to the LOWEST frame (frame 1)
+frames 3
+policy OPT
+R 0
+R 64
+R 128
+R 192
+R 0
+R 192
+R 0

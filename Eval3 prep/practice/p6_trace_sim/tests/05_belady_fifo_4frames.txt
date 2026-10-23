@@ -1,0 +1,15 @@
+# Belady's anomaly: MORE frames, MORE faults (10)
+frames 4
+policy FIFO
+R 64
+R 128
+R 192
+R 256
+R 64
+R 128
+R 320
+R 64
+R 128
+R 192
+R 256
+R 320

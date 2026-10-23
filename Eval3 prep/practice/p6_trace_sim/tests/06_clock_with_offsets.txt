@@ -1,0 +1,15 @@
+# CLOCK, 3 frames; addresses have non-zero offsets
+frames 3
+policy CLOCK
+R 133
+R 192
+R 145
+R 64
+R 383
+R 129
+R 256
+R 322
+R 192
+R 128
+R 329
+R 188

@@ -1,0 +1,9 @@
+# STRETCH: page 0 is evicted; its TLB entry must die with it
+frames 2
+policy FIFO
+tlb 4
+R 0
+R 64
+R 128
+R 0
+R 8

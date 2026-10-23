@@ -1,0 +1,10 @@
+# pagesize 128: vpn = addr/128, off = addr%128
+pagesize 128
+frames 2
+policy LRU
+R 100
+R 128
+W 127
+R 261
+R 192
+R 0

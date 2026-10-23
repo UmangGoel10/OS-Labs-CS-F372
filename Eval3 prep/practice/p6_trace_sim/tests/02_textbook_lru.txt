@@ -1,0 +1,23 @@
+# same string, LRU should fault 12 times
+frames 3
+policy LRU
+R 448
+R 0
+R 64
+R 128
+R 0
+R 192
+R 0
+R 256
+R 128
+R 192
+R 0
+R 192
+R 128
+R 64
+R 128
+R 0
+R 64
+R 448
+R 0
+R 64

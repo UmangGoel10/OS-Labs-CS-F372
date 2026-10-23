@@ -1,0 +1,57 @@
+[PAGE FAULT] Page 0 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 0
+READ 0 0 -> 0
+[PAGE FAULT] Page 1 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 1
+READ 1 0 -> 0
+[PAGE FAULT] Page 2 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 2
+READ 2 0 -> 0
+[PAGE FAULT] Page 3 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 3
+READ 3 0 -> 0
+[PAGE FAULT] Page 4 (ANON)
+  [DISK I/O] SWAP OUT: Frame 0 -> Swap Slot 0
+  [MEM] ZERO-FILL: Initializing Frame 0
+READ 4 0 -> 0
+[PAGE FAULT] Page 0 (ANON)
+  [DISK I/O] SWAP OUT: Frame 1 -> Swap Slot 1
+  [DISK I/O] SWAP IN: Slot 0 -> Frame 1
+READ 0 0 -> 0
+[PAGE FAULT] Page 1 (ANON)
+  [DISK I/O] SWAP OUT: Frame 2 -> Swap Slot 0
+  [DISK I/O] SWAP IN: Slot 1 -> Frame 2
+READ 1 0 -> 0
+[PAGE FAULT] Page 2 (ANON)
+  [DISK I/O] SWAP OUT: Frame 3 -> Swap Slot 1
+  [DISK I/O] SWAP IN: Slot 0 -> Frame 3
+READ 2 0 -> 0
+[PAGE FAULT] Page 3 (ANON)
+  [DISK I/O] SWAP OUT: Frame 0 -> Swap Slot 0
+  [DISK I/O] SWAP IN: Slot 1 -> Frame 0
+READ 3 0 -> 0
+[PAGE FAULT] Page 4 (ANON)
+  [DISK I/O] SWAP OUT: Frame 1 -> Swap Slot 1
+  [DISK I/O] SWAP IN: Slot 0 -> Frame 1
+READ 4 0 -> 0
+[PAGE FAULT] Page 0 (ANON)
+  [DISK I/O] SWAP OUT: Frame 2 -> Swap Slot 0
+  [DISK I/O] SWAP IN: Slot 1 -> Frame 2
+READ 0 0 -> 0
+[PAGE FAULT] Page 1 (ANON)
+  [DISK I/O] SWAP OUT: Frame 3 -> Swap Slot 1
+  [DISK I/O] SWAP IN: Slot 0 -> Frame 3
+READ 1 0 -> 0
+[PAGE FAULT] Page 2 (ANON)
+  [DISK I/O] SWAP OUT: Frame 0 -> Swap Slot 0
+  [DISK I/O] SWAP IN: Slot 1 -> Frame 0
+READ 2 0 -> 0
+[PAGE FAULT] Page 3 (ANON)
+  [DISK I/O] SWAP OUT: Frame 1 -> Swap Slot 1
+  [DISK I/O] SWAP IN: Slot 0 -> Frame 1
+READ 3 0 -> 0
+[PAGE FAULT] Page 4 (ANON)
+  [DISK I/O] SWAP OUT: Frame 2 -> Swap Slot 0
+  [DISK I/O] SWAP IN: Slot 1 -> Frame 2
+READ 4 0 -> 0
+STATS faults=15 minor=5 major=10 swap_in=10 swap_out=11 file_read=0 file_writeback=0 clean_discard=0

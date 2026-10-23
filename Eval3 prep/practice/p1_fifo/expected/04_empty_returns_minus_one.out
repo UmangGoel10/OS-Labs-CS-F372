@@ -1,0 +1,9 @@
+SELECT -> page -1
+  [MEM] ZERO-FILL: Initializing Frame 0
+LOAD page 0 into frame 0
+PAGE 0 type=ANON resident=1 frame=0 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+SELECT -> page 0
+  [DISK I/O] SWAP OUT: Frame 0 -> Swap Slot 0
+EVICT page 0
+PAGE 0 type=ANON resident=0 frame=-1 dirty=0 ref=0 swap=0 file=-1 offset=0 last=0
+SELECT -> page -1

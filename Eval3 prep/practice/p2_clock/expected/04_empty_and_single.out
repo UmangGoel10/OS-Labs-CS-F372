@@ -1,0 +1,6 @@
+SELECT -> page -1
+  [MEM] ZERO-FILL: Initializing Frame 3
+LOAD page 0 into frame 3
+PAGE 0 type=ANON resident=1 frame=3 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+SELECT -> page 0
+PAGE 0 type=ANON resident=1 frame=3 dirty=0 ref=0 swap=-1 file=-1 offset=0 last=0

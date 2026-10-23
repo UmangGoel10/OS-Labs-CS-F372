@@ -1,0 +1,10 @@
+[PAGE FAULT] Page 0 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 0
+FAULT page 0 -> frame 0
+PAGE 0 type=ANON resident=1 frame=0 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+[PAGE FAULT] Page 1 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 1
+FAULT page 1 -> frame 1
+PAGE 1 type=ANON resident=1 frame=1 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+PAGE 0 type=ANON resident=1 frame=0 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+PAGE 1 type=ANON resident=1 frame=1 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
