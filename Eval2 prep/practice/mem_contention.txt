@@ -1,0 +1,5 @@
+arena 1024
+minblock 64
+job A 500 sleep 2
+job B 500 sleep 2
+job C 500 sleep 1

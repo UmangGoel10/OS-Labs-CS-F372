@@ -1,0 +1,4 @@
+{
+  "name": "coalescing does not skip used blocks",
+  "expected_output": "alloc 200 -> id 1, offset 0, size 200\nalloc 300 -> id 2, offset 200, size 300\nalloc 100 -> id 3, offset 500, size 100\nfree 1 -> OK\nfree 3 -> OK\nOffset  Size  State  Last used\n     0   200  FREE   1\n   200   300  USED   2\n   500   524  FREE   3\nfree 2 -> OK\nOffset  Size  State  Last used\n     0  1024  FREE   3\n"
+}

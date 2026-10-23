@@ -1,0 +1,4 @@
+{
+  "name": "reuse an isolated freed region",
+  "expected_output": "alloc 600 -> id 1, offset 0, size 600\nalloc 424 -> id 2, offset 600, size 424\nfree 1 -> OK\nalloc 500 -> id 1, offset 0, size 500\nOffset  Size  State  Last used\n     0   500  USED   3\n   500   100  FREE   0\n   600   424  USED   2\n"
+}

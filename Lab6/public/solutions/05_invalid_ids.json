@@ -1,0 +1,4 @@
+{
+  "name": "invalid and repeated frees",
+  "expected_output": "free 1 -> INVALID ID\nalloc 64 -> id 1, offset 0, size 64\nfree 1 -> OK\nfree 1 -> INVALID ID\nfree 99 -> INVALID ID\nOffset  Size  State  Last used\n     0  1024  FREE   1\n"
+}

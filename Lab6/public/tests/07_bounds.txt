@@ -1,0 +1,5 @@
+alloc 0
+alloc 1025
+alloc 1024
+alloc 1
+free 1

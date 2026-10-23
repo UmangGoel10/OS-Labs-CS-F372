@@ -22,11 +22,10 @@ static Block blocks[SLOT_COUNT];
 
 /* Round a valid request up to a supported power-of-two block size. */
 static size_t round_size(size_t requested) {
-    if (requested == 0 || requested > ARENA_SIZE)
-        return 0;
+    if (requested == 0 || requested > ARENA_SIZE) return 0;
     size_t size = MIN_BLOCK;
-    while (size < requested)
-        size *= 2;
+    while (size < requested) size *= 2;
+
     return size;
 }
 
@@ -50,6 +49,7 @@ static int allocated_index(void *ptr) {
         return -1;
     int index = (int)(offset / MIN_BLOCK);
     return blocks[index].size != 0 && !blocks[index].free ? index : -1;
+    
 }
 
 /* Allocate from the arena; return NULL when the request cannot be satisfied. */

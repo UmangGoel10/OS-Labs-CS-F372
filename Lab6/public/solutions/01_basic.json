@@ -1,0 +1,4 @@
+{
+  "name": "basic allocation and show",
+  "expected_output": "Offset  Size  State  Last used\n     0  1024  FREE   0\nalloc 100 -> id 1, offset 0, size 100\nOffset  Size  State  Last used\n     0   100  USED   1\n   100   924  FREE   0\n"
+}

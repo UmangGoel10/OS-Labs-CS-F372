@@ -1,0 +1,4 @@
+alloc 1024
+show
+free 1
+show

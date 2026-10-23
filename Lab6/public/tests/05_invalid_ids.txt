@@ -1,0 +1,6 @@
+free 1
+alloc 64
+free 1
+free 1
+free 99
+show

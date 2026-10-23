@@ -1,0 +1,4 @@
+{
+  "name": "timestamp priority and offset tie breaking",
+  "expected_output": "alloc 256 -> id 1, offset 0, size 256\nalloc 512 -> id 2, offset 256, size 512\nalloc 256 -> id 3, offset 768, size 256\nfree 1 -> OK\nalloc 256 -> id 1, offset 0, size 256\nfree 1 -> OK\nfree 3 -> OK\nalloc 128 -> id 1, offset 768, size 128\nalloc 128 -> id 3, offset 0, size 128\nalloc 64 -> id 4, offset 128, size 64\nOffset  Size  State  Last used\n     0   128  USED   6\n   128    64  USED   7\n   192    64  FREE   0\n   256   512  USED   2\n   768   128  USED   5\n   896   128  FREE   0\n"
+}

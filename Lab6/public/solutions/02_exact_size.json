@@ -1,0 +1,4 @@
+{
+  "name": "exact-size allocation",
+  "expected_output": "alloc 1024 -> id 1, offset 0, size 1024\nOffset  Size  State  Last used\n     0  1024  USED   1\nfree 1 -> OK\nOffset  Size  State  Last used\n     0  1024  FREE   1\n"
+}

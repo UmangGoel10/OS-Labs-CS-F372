@@ -1,0 +1,11 @@
+alloc 256
+alloc 512
+alloc 256
+free 1
+alloc 256
+free 1
+free 3
+alloc 128
+alloc 128
+alloc 64
+show

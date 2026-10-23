@@ -1,0 +1,4 @@
+{
+  "name": "allocation bounds and full arena",
+  "expected_output": "alloc 0 -> FAILED\nalloc 1025 -> FAILED\nalloc 1024 -> id 1, offset 0, size 1024\nalloc 1 -> FAILED\nfree 1 -> OK\n"
+}

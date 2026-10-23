@@ -1,0 +1,4 @@
+{
+  "name": "largest block selection",
+  "expected_output": "alloc 200 -> id 1, offset 0, size 200\nalloc 100 -> id 2, offset 200, size 100\nfree 1 -> OK\nalloc 150 -> id 1, offset 300, size 150\nOffset  Size  State  Last used\n     0   200  FREE   1\n   200   100  USED   2\n   300   150  USED   3\n   450   574  FREE   0\n"
+}

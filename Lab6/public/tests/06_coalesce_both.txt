@@ -1,0 +1,8 @@
+alloc 200
+alloc 300
+alloc 100
+free 1
+free 3
+show
+free 2
+show

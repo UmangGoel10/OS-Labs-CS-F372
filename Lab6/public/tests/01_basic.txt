@@ -1,0 +1,3 @@
+show
+alloc 100
+show

@@ -1,0 +1,5 @@
+alloc 600
+alloc 424
+free 1
+alloc 500
+show
