@@ -1,0 +1,19 @@
+  [MEM] ZERO-FILL: Initializing Frame 0
+LOAD page 0 into frame 0
+PAGE 0 type=ANON resident=1 frame=0 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+  [MEM] ZERO-FILL: Initializing Frame 1
+LOAD page 1 into frame 1
+PAGE 1 type=ANON resident=1 frame=1 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+  [MEM] ZERO-FILL: Initializing Frame 2
+LOAD page 2 into frame 2
+PAGE 2 type=ANON resident=1 frame=2 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+  [MEM] ZERO-FILL: Initializing Frame 3
+LOAD page 3 into frame 3
+PAGE 3 type=ANON resident=1 frame=3 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+READ 3 0 -> 0
+READ 1 0 -> 0
+READ 0 0 -> 0
+READ 2 0 -> 0
+SELECT -> page 3
+READ 3 0 -> 0
+SELECT -> page 1

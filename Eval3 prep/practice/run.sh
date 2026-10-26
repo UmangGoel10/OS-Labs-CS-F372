@@ -6,13 +6,13 @@
 #   ./run.sh p1_fifo sol          same, but with the reference solution.c
 #   ./run.sh p1_fifo sol --regen  (author only) rewrite expected/ from solution.c
 #
-# p1..p5 link  framework/paging_test_driver.c + framework/sim_framework.c + <paging.c|solution.c>
+# p1..p5, p7, p8 link  framework/paging_test_driver.c + framework/sim_framework.c + <paging.c|solution.c>
 # p6          is a standalone program (trace_sim.c | solution.c)
 set -u
 cd "$(dirname "$0")"
 
 scenario="${1:-}"
-[ -d "$scenario" ] || { echo "usage: $0 <p1_fifo|p2_clock|p3_swap_cache|p4_fault_stats|p5_readahead|p6_trace_sim> [N | sol] [--regen]"; exit 2; }
+[ -d "$scenario" ] || { echo "usage: $0 <p1_fifo|p2_clock|p3_swap_cache|p4_fault_stats|p5_readahead|p6_trace_sim|p7_robust_ids|p8_fewest_evictions> [N | sol] [--regen]"; exit 2; }
 shift
 
 use_sol=0; regen=0; only=""

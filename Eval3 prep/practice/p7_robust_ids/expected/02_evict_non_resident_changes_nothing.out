@@ -1,0 +1,12 @@
+SEVICT 0 -> INVALID
+  [MEM] ZERO-FILL: Initializing Frame 0
+SLOAD 0 0 -> OK
+  [DISK I/O] SWAP OUT: Frame 0 -> Swap Slot 0
+SEVICT 0 -> OK
+SEVICT 0 -> INVALID
+  [MEM] ZERO-FILL: Initializing Frame 0
+SLOAD 1 0 -> OK
+  [DISK I/O] SWAP OUT: Frame 0 -> Swap Slot 1
+SEVICT 1 -> OK
+PAGE 0 type=ANON resident=0 frame=-1 dirty=0 ref=0 swap=0 file=-1 offset=0 last=0
+PAGE 1 type=ANON resident=0 frame=-1 dirty=0 ref=0 swap=1 file=-1 offset=0 last=0

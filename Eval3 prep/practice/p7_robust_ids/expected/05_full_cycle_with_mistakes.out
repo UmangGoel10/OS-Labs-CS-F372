@@ -1,0 +1,31 @@
+[PAGE FAULT] Page 0 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 0
+SFAULT 0 -> frame 0
+[PAGE FAULT] Page 1 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 1
+SFAULT 1 -> frame 1
+[PAGE FAULT] Page 2 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 2
+SFAULT 2 -> frame 2
+[PAGE FAULT] Page 3 (ANON)
+  [MEM] ZERO-FILL: Initializing Frame 3
+SFAULT 3 -> frame 3
+[PAGE FAULT] Page 4 (ANON)
+  [DISK I/O] SWAP OUT: Frame 0 -> Swap Slot 0
+  [MEM] ZERO-FILL: Initializing Frame 0
+SFAULT 4 -> frame 0
+SEVICT 0 -> INVALID
+  [DISK I/O] SWAP OUT: Frame 0 -> Swap Slot 1
+SEVICT 4 -> OK
+  [DISK I/O] SWAP OUT: Frame 1 -> Swap Slot 2
+SEVICT 1 -> OK
+  [DISK I/O] SWAP OUT: Frame 2 -> Swap Slot 3
+SEVICT 2 -> OK
+  [DISK I/O] SWAP OUT: Frame 3 -> Swap Slot 4
+SEVICT 3 -> OK
+SEVICT 3 -> INVALID
+SELECT -> page -1
+  [DISK I/O] SWAP IN: Slot 0 -> Frame 3
+SLOAD 0 3 -> OK
+SELECT -> page 0
+SFAULT 0 -> frame 3

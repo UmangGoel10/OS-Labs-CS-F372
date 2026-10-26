@@ -1,0 +1,13 @@
+  [MEM] ZERO-FILL: Initializing Frame 0
+SLOAD 0 0 -> OK
+SLOAD 0 1 -> INVALID
+SLOAD 1 0 -> INVALID
+  [MEM] ZERO-FILL: Initializing Frame 1
+SLOAD 1 1 -> OK
+  [FILE I/O] READ FILE (ID 101, Offset 0) -> Frame 2
+SLOAD 6 2 -> OK
+SLOAD 7 2 -> INVALID
+PAGE 0 type=ANON resident=1 frame=0 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+PAGE 1 type=ANON resident=1 frame=1 dirty=0 ref=1 swap=-1 file=-1 offset=0 last=0
+PAGE 6 type=FILE resident=1 frame=2 dirty=0 ref=1 swap=-1 file=101 offset=0 last=0
+PAGE 7 type=FILE resident=0 frame=-1 dirty=0 ref=0 swap=-1 file=101 offset=64 last=0

@@ -60,6 +60,11 @@ void load_page(int page_id, int frame_id);
 /* EXTENSION: prints the STATS line (only needed by the fault-accounting scenario;
  * the test driver supplies a weak default so other scenarios still link). */
 void print_fault_stats(void);
+/* EXTENSION (scenario P7 only): validated wrappers.  The test driver supplies
+ * weak do-nothing defaults so every other scenario still links. */
+int safe_evict(int page_id);               /* 1 = evicted, 0 = INVALID */
+int safe_load(int page_id, int frame_id);  /* 1 = loaded,  0 = INVALID */
+int safe_fault(int page_id);               /* frame of the page, or -1 = INVALID */
 /* Provided page-fault handler. Do not modify. */
 int handle_page_fault(int page_id);
 

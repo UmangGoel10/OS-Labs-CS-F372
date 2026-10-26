@@ -17,7 +17,8 @@ Eval3 prep/
     run.sh                  <- ./run.sh p1_fifo | ./run.sh p1_fifo sol | ./run.sh p1_fifo 3
     framework/              <- Lab 7's simulator + 2 small extensions (reference bit, STATS cmd)
     p0_lab7_baseline/       <- reference solution for the ORIGINAL Lab 7 (14/14 public tests)
-    p1_fifo/ … p5_readahead/   paging.c (skeleton, TODOs)  solution.c  tests/  expected/
+    p1_fifo/ … p5_readahead/, p7_robust_ids/, p8_fewest_evictions/
+                            <- paging.c (skeleton, TODOs)  solution.c  tests/  expected/
     p6_trace_sim/           <- from-scratch simulator: trace_sim.c (skeleton) + solution.c
 ```
 
@@ -25,6 +26,69 @@ Workflow per scenario: read the twist in its `paging.c` header → **predict** o
 paper → implement → `./run.sh <scenario>` → only then peek at `solution.c`.
 Every `solution.c` is verified (all tests pass); the P6 solution was also cross-checked against an
 independent model on 300 random traces.
+
+---
+
+## Field notes from Lab 6 — how these labs are built and graded
+
+Lab 6 (worst-fit allocator, outside the syllabus) is a clean specimen of the house style. What it
+shows, and how it changed this prep (P7, P8 and the weights in §3b came from reading it):
+
+**Anatomy — Lab 7 follows it exactly**
+- Story README → skeleton that already holds the structs, helpers, **all the `printf` formatting**
+  and `main()`. You fill ~3 core functions plus a couple of tiny syscall TODOs.
+- Provided helpers are meant to be *used* (`insert_block`, `remove_block`, `smallest_unused_id`;
+  in Lab 7: the `sim_*` API and the provided fault handler).
+- Contracts live in comments: "returns -1 if…", "**must not change allocator state**".
+- The README ends with a **full worked example** showing the state after every step. Copy it into
+  a command file and make your code reproduce it — that is a free first test.
+- Grader: command file in, stdout diffed **exactly** against an expected JSON; built with
+  `gcc -Wall -Wextra -g`; 5 s timeout, 1 MiB output cap; a crash/signal or non-zero exit fails the
+  test even if the text matched.
+- Lab 6's Makefile has **`make test-private`**, i.e. a hidden suite exists. Lab 7's README says all
+  14 tests are public — but treat the public set as a *sample*, not the exam.
+
+**What its 8 public tests check — and the Lab 7 twin**
+
+| Lab 6 test | What it really tests | Lab 7 counterpart |
+|---|---|---|
+| 01 basic, 02 exact size | happy path, exact fit (no split) | 01 first touch |
+| 03 worst fit | the policy picks the right candidate | 02 priority categories |
+| 04 tie break | multi-key chain: largest → smallest `last_used` → smallest offset | 03 LRU & ties |
+| 05 invalid ids | repeated / unknown id is refused, state untouched | **none public** → P7 |
+| 06 coalesce both | merge rule incl. metadata (`max(last_used)`) | 09/10 mixed priority |
+| 07 bounds | `alloc 0`, oversize, full arena | 13 no resident victim (`-1`) |
+| 08 reuse isolated free region | freed resource is reused (ID / region) | 14 swap-slot reuse |
+
+**Takeaways**
+1. **Spec fidelity beats cleverness.** Lab 6's difficulty is one paragraph of tiny rules (clock
+   bumps only on a *successful* alloc; `free` keeps `last_used`; a split remainder gets 0; a merge
+   keeps the max; smallest unused ID is reused). Every sentence is a test. Technique: underline each
+   *must / only / if equal / never* in the prompt and write one command-file test per sentence
+   **before** coding.
+2. **Evals are variants of the lab.** Lab 6 = an allocator lab with a different policy, one extra
+   metadata field and a three-key tie-break. Expect Eval 3 = Lab 7 with a different policy / extra
+   per-page field / different ties (P1, P2, P8).
+3. **Invalid and degenerate input is first-class** — 2 of Lab 6's 8 public tests. Lab 7's public
+   tests have none, so an eval that adds them would hit people who only practised the happy path
+   (P7). *(That last part is my inference, not something the repo states.)*
+4. **Skeleton gotchas.** Lab 6's `student.c` uses `MAP_FAILED` but includes no `<sys/mman.h>`: it
+   does not compile until you add it (verified). `main` has two exit paths and a "TODO: unmap" on
+   **both**. If a twist asks for real memory:
+
+   ```c
+   #define _DEFAULT_SOURCE                 /* already at the top of the Lab 6 skeleton */
+   #include <sys/mman.h>                   /* you must add this */
+   arena = mmap(NULL, ARENA_SIZE, PROT_READ | PROT_WRITE,
+                MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);   /* fd -1, offset 0 */
+   if (arena == MAP_FAILED) { perror("mmap"); /* close/cleanup */ return 1; }   /* not NULL! */
+   ...
+   munmap(arena, ARENA_SIZE);              /* same length, on EVERY exit path */
+   ```
+   Anonymous mappings are zero-filled by the kernel on first touch — a *real* minor fault, the
+   exact thing Lab 7 simulates.
+5. **Debug the way the README tells you:** `gdb --args ./prog cmds.txt`, `break` on your functions,
+   `print` the state, and write your own tiny command files.
 
 ---
 
@@ -126,12 +190,16 @@ re-derive something instead of recalling it.* Likelihood is my estimate, not ins
 | I | **Whole simulator from scratch** | read a reference/trace file, run FIFO/LRU/Clock/OPT, report faults/hits/write-backs | everything (P6) | ★★ |
 | J | **Environment changes** | different `NUM_FRAMES`/`NUM_PAGES`, more files, shared file pages (refcount), per-process tables with global vs local replacement, fork + copy-on-write (ties to Eval 2) | structure of the model | ★ |
 | K | **Paper/short answer** | Belady's anomaly, EAT, page-table size, TLB reach, working set, thrashing | none (see §6) | ★★ |
+| L | **Invalid / degenerate input** | out-of-range page or frame id; evict a non-resident page twice; load into an occupied frame; fault on a resident page; return `0`/`-1` instead of crashing (Lab 6 tests 05, 07) | validation wrappers around the three functions (P7) | ★★★ |
+| M | **Chained tie-breaks + your own metadata** | "fewest evictions → oldest access → smallest id"; a per-page counter with exact update rules (Lab 6's `last_used` paragraph) | `select_victim_page` + a counter touched in `evict_page` (P8) | ★★★ |
+| N | **Systems glue** | `mmap`/`munmap` for the simulated memory, `MAP_FAILED` check, unmap on every exit path, missing `#include` (Lab 6 `main` TODOs) | the file's setup/teardown | ★ |
 
 ---
 
 ## 4. Practice scenarios
 
-Do them in this order. Time targets assume the real eval's ~60 min budget feels tight.
+Do them in this order. Lab 7's README suggests 60 minutes for the whole lab; the targets below keep
+each twist well inside that. (P6 is a different style of task — treat it as the stretch.)
 
 | Id | Folder | Twist | Trains | Target |
 |---|---|---|---|---|
@@ -142,6 +210,8 @@ Do them in this order. Time targets assume the real eval's ~60 min budget feels 
 | **P4** | `p4_fault_stats/` | count minor/major faults, swap & file I/O, add `STATS` | where each event is observable; exact output format | 10 min |
 | **P5** | `p5_readahead/` | **you write `handle_page_fault`** + sequential read-ahead | orchestration order, frame bookkeeping, never evict for prefetch | 20 min |
 | **P6** | `p6_trace_sim/` | simulator from scratch: translate, 4 policies, dirty/write-back, (stretch) TLB | everything without a safety net | 40 min |
+| **P7** | `p7_robust_ids/` | validated wrappers `safe_evict` / `safe_load` / `safe_fault` that refuse bad input | range checks *before* `sim_get_page_info`, "refuse = change nothing, print nothing" | 15 min |
+| **P8** | `p8_fewest_evictions/` | victim = fewest evictions → oldest access → smallest id | 3-key comparator, your own counter with exact update rules, pure chooser | 15 min |
 
 ### P0 — Lab 7 from memory
 Do the original lab (`Lab 7/paging.c`, `make test`) *without* looking, then compare with
@@ -187,6 +257,20 @@ Full spec is at the top of `trace_sim.c`. Do FIFO + LRU first (check against the
 in §6a), then CLOCK, then OPT, then the TLB stretch (tests 08–09). Traps: access numbers are
 1-based; `vpn = addr / pagesize`; a faulting **write** dirties the page it just loaded; OPT ties
 → lowest frame; **evicting a page must invalidate its TLB entry** (test 09 exists for exactly this).
+
+### P7 — Robust wrappers
+*"Evicting a page that isn't resident, or a page id of 99, must not crash or print anything — return
+0."* Traps: `sim_get_page_info(-1)` / `(12)` is out-of-bounds, so the **range check goes first**;
+a refused call must not allocate a swap slot (test 02 proves it via the next slot number); a
+"fault" on an already-resident page is not a fault — return its frame and stay silent; frame
+occupancy needs a scan over all pages. Test 05 even contains a mistake of its own (it evicts a page
+the fault handler already evicted) — you have to *predict* the INVALID.
+
+### P8 — Fewest evictions (tie-break chain)
+Three keys, in order, exactly as written; ascending scan + strict `<` on each key gives the
+"smallest id" tie-break for free. The counter rules are the point: it counts **every**
+`evict_page` call (handler or `EVICT` command), survives a reload, and `SELECT` is pure (test 05).
+Compare how you'd write the comparator with Lab 6's `find_worst_fit` rule.
 
 ### Variations with no files (modify a solution yourself)
 MRU · enhanced clock · cost-based eviction (`clean file=0, anon=1 swap write, dirty file=1`) ·
@@ -289,7 +373,9 @@ Then do the same for a test of your own with a `WRITE` on a file page followed b
 ## 9. Exam-day workflow
 
 1. Read the whole prompt; mark what is **provided** vs **TODO**. Test file names are a spec — read them.
+   Underline every *must / only / if equal / never*: each is a hidden test (Lab 6 lesson).
 2. Hand-trace *one* expected output until you reproduce it exactly (learns `last=`, slot numbers, I/O line order).
 3. Implement the smallest function first, run that test, then the next. Don't write all three blind.
-4. Keep a 5-minute tail for edge cases (§7) and a clean compile.
+4. Keep a 5-minute tail for edge cases (§7) and a clean compile. The hidden suite likely goes beyond
+   the public tests: write 2–3 of your own command files for invalid ids, empty memory, full memory, ties.
 5. If the twist needs information the framework doesn't expose (§3a), say so and ask — don't invent it.

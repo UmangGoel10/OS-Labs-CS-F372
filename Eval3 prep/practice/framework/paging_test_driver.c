@@ -14,6 +14,10 @@ __attribute__((weak)) void print_fault_stats(void) {
     printf("STATS not implemented\n");
 }
 
+__attribute__((weak)) int safe_evict(int page_id) { (void)page_id; return 0; }
+__attribute__((weak)) int safe_load(int page_id, int frame_id) { (void)page_id; (void)frame_id; return 0; }
+__attribute__((weak)) int safe_fault(int page_id) { (void)page_id; return -1; }
+
 static void print_page_info(int page_id) {
     PageInfo page = sim_get_page_info(page_id);
     const char *type = page.type == PAGE_ANON ? "ANON" : "FILE";
@@ -67,6 +71,33 @@ static int process_commands(FILE *input) {
             print_page_info(page_id);
         } else if (strcmp(command, "STATE") == 0) {
             print_all_pages();
+        } else if (strcmp(command, "SEVICT") == 0) {
+            int page_id;
+            if (fscanf(input, "%d", &page_id) != 1) {
+                fprintf(stderr, "Expected: SEVICT <page_id>\n");
+                return 0;
+            }
+            int ok = safe_evict(page_id);
+            printf("SEVICT %d -> %s\n", page_id, ok ? "OK" : "INVALID");
+        } else if (strcmp(command, "SLOAD") == 0) {
+            int page_id, frame_id;
+            if (fscanf(input, "%d %d", &page_id, &frame_id) != 2) {
+                fprintf(stderr, "Expected: SLOAD <page_id> <frame_id>\n");
+                return 0;
+            }
+            int ok = safe_load(page_id, frame_id);
+            printf("SLOAD %d %d -> %s\n", page_id, frame_id, ok ? "OK" : "INVALID");
+        } else if (strcmp(command, "SFAULT") == 0) {
+            int page_id;
+            if (fscanf(input, "%d", &page_id) != 1) {
+                fprintf(stderr, "Expected: SFAULT <page_id>\n");
+                return 0;
+            }
+            int frame = safe_fault(page_id);
+            if (frame < 0)
+                printf("SFAULT %d -> INVALID\n", page_id);
+            else
+                printf("SFAULT %d -> frame %d\n", page_id, frame);
         } else if (strcmp(command, "STATS") == 0) {
             print_fault_stats();
         } else if (strcmp(command, "SELECT") == 0) {
@@ -102,7 +133,7 @@ static int process_commands(FILE *input) {
         } else {
             fprintf(stderr,
                     "Unknown command '%s'; expected READ, WRITE, INFO, STATE, "
-                    "STATS, SELECT, EVICT, LOAD, or FAULT\n",
+                    "STATS, SELECT, EVICT, LOAD, FAULT, SEVICT, SLOAD, or SFAULT\n",
                     command);
             return 0;
         }
